@@ -34,21 +34,9 @@ typedef struct UFS_NODE_S {
 
 typedef struct GRPSERV
 {
-	long id;//关联ID
-	long lGrpId;//关联ID
-	long lServId;//用户ID
-	long pos;//反向索引的位置,初始化为0
-	int type;//关联业务类型
-	int oldtype;
-	long lNewGrpId;//分组ID
-	long lSnbr;// 版本号，初始化为0
-	char sCityId[8];//本地网
-	int flag;
-	long lGrpCount;//分组业务关联ID数量
-	long lServCount;//用户数
-    long lPartRefCount;  //组映射到分区均衡策略参考的数据，根据该字段的值均匀分布到不同的分区上
-    long fromGrpId;     // 记录迁出组
-    long toGrpId;       // 记录迁入组
+	long lGrpId;
+	long lServId;
+	int type;
 }SGRPSERV;
 
 class CGroupAlgorithm { //估计要增加vectSortedAllGrpServ引用成员
