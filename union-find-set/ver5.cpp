@@ -6,9 +6,9 @@
 using namespace std;
 
 typedef struct UFS_KEY_S {
-	long Id;//busi_id»òÕßserv_id
-	//int recordId;//¸Ã½á¹¹´æµÄÊÇbusi_idÊ±£¬recordIdÎªÓĞĞ§Öµ;ÎªµÄÊÇ·ÀÖ¹³öÏÖbusiidºÍservidÏàÍ¬²¢ÇÒtypeÒ²ÏàÍ¬µÄÇé¿öµ¼ÖÂ´íÎó
-	int type;//±êÖ¾idµÄÀàĞÍ
+	long Id;//busi_idæˆ–è€…serv_id
+	//int recordId;//è¯¥ç»“æ„å­˜çš„æ˜¯busi_idæ—¶ï¼ŒrecordIdä¸ºæœ‰æ•ˆå€¼;ä¸ºçš„æ˜¯é˜²æ­¢å‡ºç°busiidå’Œservidç›¸åŒå¹¶ä¸”typeä¹Ÿç›¸åŒçš„æƒ…å†µå¯¼è‡´é”™è¯¯
+	int type;//æ ‡å¿—idçš„ç±»å‹
 	bool operator!=(const struct UFS_KEY_S &t)
 	{
 		return (Id!=t.Id)||(type!=t.type);	
@@ -27,31 +27,19 @@ bool operator <(const UfsKey &key1,const UfsKey &key2)
 }  
 
 typedef struct UFS_NODE_S {
-	UfsKey followId;//²¢²é¼¯ ±»¸úËæÕßID£¬³õÊ¼»¯Ê±Îª¸úËæ×ÔÉí
+	UfsKey followId;//å¹¶æŸ¥é›† è¢«è·Ÿéšè€…IDï¼Œåˆå§‹åŒ–æ—¶ä¸ºè·Ÿéšè‡ªèº«
 	list<int>* pRecordIds;
-	int rank;//±»¸úËæÕßÓĞÒâÒå£¬´ú±í¶àÉÙÈË¸úËæ£¨ÓÅ»¯£¬¿É¸ù¾İĞ§ÂÊÀ´ÅĞ¶ÏÊÇ·ñĞèÒª£©
+	int rank;//è¢«è·Ÿéšè€…æœ‰æ„ä¹‰ï¼Œä»£è¡¨å¤šå°‘äººè·Ÿéšï¼ˆä¼˜åŒ–ï¼Œå¯æ ¹æ®æ•ˆç‡æ¥åˆ¤æ–­æ˜¯å¦éœ€è¦ï¼‰
 }UfsNode;//the node of union-find set
 
 typedef struct GRPSERV
 {
-	long id;//¹ØÁªID
-	long lGrpId;//¹ØÁªID
-	long lServId;//ÓÃ»§ID
-	long pos;//·´ÏòË÷ÒıµÄÎ»ÖÃ,³õÊ¼»¯Îª0
-	int type;//¹ØÁªÒµÎñÀàĞÍ
-	int oldtype;
-	long lNewGrpId;//·Ö×éID
-	long lSnbr;// °æ±¾ºÅ£¬³õÊ¼»¯Îª0
-	char sCityId[8];//±¾µØÍø
-	int flag;
-	long lGrpCount;//·Ö×éÒµÎñ¹ØÁªIDÊıÁ¿
-	long lServCount;//ÓÃ»§Êı
-    long lPartRefCount;  //×éÓ³Éäµ½·ÖÇø¾ùºâ²ßÂÔ²Î¿¼µÄÊı¾İ£¬¸ù¾İ¸Ã×Ö¶ÎµÄÖµ¾ùÔÈ·Ö²¼µ½²»Í¬µÄ·ÖÇøÉÏ
-    long fromGrpId;     // ¼ÇÂ¼Ç¨³ö×é
-    long toGrpId;       // ¼ÇÂ¼Ç¨Èë×é
+	long lGrpId;
+	long lServId;
+	int type;
 }SGRPSERV;
 
-class CGroupAlgorithm { //¹À¼ÆÒªÔö¼ÓvectSortedAllGrpServÒıÓÃ³ÉÔ±
+class CGroupAlgorithm { //ä¼°è®¡è¦å¢åŠ vectSortedAllGrpServå¼•ç”¨æˆå‘˜
 public:
 	CGroupAlgorithm(vector<GRPSERV>& vectSortedAllGrpServ);
 	void mergeAll();
@@ -62,11 +50,11 @@ public:
 	void stampGroupIdAndFree(long &lStartGroupId);//in-out
 private:
 	void merge(int recordId,UfsKey &k1, UfsKey &k2);
-	UfsKey find(UfsKey &x);//ÕâÀï²»ÄÜ·µ»ØÒıÓÃÀàĞÍ£¬·ÀÖ¹ÔÚmergeÊ±³ö´í
+	UfsKey find(UfsKey &x);//è¿™é‡Œä¸èƒ½è¿”å›å¼•ç”¨ç±»å‹ï¼Œé˜²æ­¢åœ¨mergeæ—¶å‡ºé”™
 	void GrpServ2BusiKey(const GRPSERV &record,UfsKey &k);
 	void GrpServ2ServKey(const GRPSERV &record,UfsKey &k);
 	void initNode(const UfsKey &k,UfsNode &node);
-	void stampGroupId(const list<int> &recordIds,long groupId);//´òÉÏgroupId
+	void stampGroupId(const list<int> &recordIds,long groupId);//æ‰“ä¸ŠgroupId
 private:
 	map<UfsKey, UfsNode> set;
 	vector<GRPSERV>& m_vectAllGrpServ;
@@ -102,16 +90,16 @@ void CGroupAlgorithm::merge(int recordId,UfsKey &k1, UfsKey &k2) {
 	if ((x == y)) {
 		return;
 	}
-	UfsNode &setx = set[x];//¶à´ÎÊ¹ÓÃ£¬ÒıÓÃ¼Ó¿ì·ÃÎÊËÙ¶È
-	UfsNode &sety = set[y];//¶à´ÎÊ¹ÓÃ£¬ÒıÓÃ¼Ó¿ì·ÃÎÊËÙ¶È
+	UfsNode &setx = set[x];//å¤šæ¬¡ä½¿ç”¨ï¼Œå¼•ç”¨åŠ å¿«è®¿é—®é€Ÿåº¦
+	UfsNode &sety = set[y];//å¤šæ¬¡ä½¿ç”¨ï¼Œå¼•ç”¨åŠ å¿«è®¿é—®é€Ÿåº¦
 	
-	//Ö¸ÕëµÄÒıÓÃÊÇ´æÔÚµÄ
-	list<int>* &pxRec = setx.pRecordIds;//¶à´ÎÊ¹ÓÃ£¬ÒıÓÃ¼Ó¿ì·ÃÎÊËÙ¶È
-	list<int>* &pyRec = sety.pRecordIds;//¶à´ÎÊ¹ÓÃ£¬ÒıÓÃ¼Ó¿ì·ÃÎÊËÙ¶È
+	//æŒ‡é’ˆçš„å¼•ç”¨æ˜¯å­˜åœ¨çš„
+	list<int>* &pxRec = setx.pRecordIds;//å¤šæ¬¡ä½¿ç”¨ï¼Œå¼•ç”¨åŠ å¿«è®¿é—®é€Ÿåº¦
+	list<int>* &pyRec = sety.pRecordIds;//å¤šæ¬¡ä½¿ç”¨ï¼Œå¼•ç”¨åŠ å¿«è®¿é—®é€Ÿåº¦
 	if (setx.rank>sety.rank) {
 		sety.followId = x;
 		setx.rank += sety.rank;
-		//ÓÉÓÚrankÊÇ³õÊ¼ÖµÎª1£¬x.rank±Ø¶¨´óÓÚµÈÓÚ2£¬´ËÊ±recordIdsÖĞ±Ø¶¨ÓĞÊı¾İ£¬Ö±½ÓÅĞ¶ÏyÖĞÊÇ·ñº¬ÓĞrecordid¼´¿É
+		//ç”±äºrankæ˜¯åˆå§‹å€¼ä¸º1ï¼Œx.rankå¿…å®šå¤§äºç­‰äº2ï¼Œæ­¤æ—¶recordIdsä¸­å¿…å®šæœ‰æ•°æ®ï¼Œç›´æ¥åˆ¤æ–­yä¸­æ˜¯å¦å«æœ‰recordidå³å¯
 		if (pyRec != NULL) {
 			pxRec->splice(pxRec->end(), *pyRec);
 			delete pyRec;
@@ -158,7 +146,7 @@ void CGroupAlgorithm::stampGroupId(const list<int> &recordIds,long groupId) {
 void CGroupAlgorithm::stampGroupIdAndFree(long &lStartGroupId) {
 	map<UfsKey, UfsNode>::iterator it = set.begin();
 	map<UfsKey, UfsNode>::iterator end = set.end();
-	//lStartGroupIdÀ´×ÔÅäÖÃ
+	//lStartGroupIdæ¥è‡ªé…ç½®
 	for(;it!=end;it++) {
 		list<int>* &pRecordIds = it->second.pRecordIds;
 		if(pRecordIds != NULL) {
